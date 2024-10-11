@@ -1,4 +1,4 @@
-IT-AUTOFLIGHT Changelog
+IT Autoflight Changelog
 Copyright (c) 2024 Josh Davidson (Octal450)
 I will note if new ITAF tuning or config is required. Simply check the "ITAF CONFIG.txt" file.
 

@@ -1,4 +1,4 @@
-# IT-AUTOFLIGHT V4.0.9 Custom FMA File
+# IT Autoflight V4.1.0 Custom FMA File
 # Make sure you enable custom-fma in the config
 # Copyright (c) 2024 Josh Davidson (Octal450)
 
