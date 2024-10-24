@@ -1025,7 +1025,7 @@ var ITAF = {
 		}
 	},
 	checkFlch: func(a) {
-		if (Position.gearAglFt.getValue() >= a and a != 0) {
+		if (!Gear.wow1.getBoolValue() and !Gear.wow2.getBoolValue() and Position.gearAglFt.getValue() >= a and a != 0) {
 			me.setVertMode(4);
 		}
 	},
