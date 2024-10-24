@@ -4,6 +4,10 @@ I will note if new ITAF tuning or config is required. Simply check the "ITAF CON
 
 ---------------------------------------------------------------------------------------------------------------------
 
+V4.1.0:
+[Logic]
+* Fixed: Various logic controller bugs
+
 V4.0.9:
 [Control Loop]
 * Added: Basic pitch hold mode
