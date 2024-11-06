@@ -7,38 +7,33 @@ See wiki for details on parameters.
 	<it-autoflight>
 		<config>
 			<roll>
-				<kp-low>0.11</kp-low> <!-- Kp at low speed -->
-				<kp-high>0.05</kp-high> <!-- Kp at high speed -->
-				<ti>1.0</ti>
-				<td>0.0001</td>
+				<kp-low>0.11</kp-low> <!-- Roll rate gain at low speed -->
+				<kp-high>0.05</kp-high> <!-- Roll rate gain at high speed -->
 			</roll>
 			<pitch>
-				<kp-low>-0.14</kp-low> <!-- Kp at low speed -->
-				<kp-high>-0.06</kp-high> <!-- Kp at high speed -->
-				<ti>0.5</ti>
-				<td>0.001</td>
+				<kp-low>-0.14</kp-low> <!-- Pitch rate gain at low speed -->
+				<kp-high>-0.06</kp-high> <!-- Pitch rate gain at high speed -->
 			</pitch>
+			<yaw>
+				<gain-factor>1.0</gain-factor> <!-- Yaw rate gain scaling factor for align/rollout -->
+			</yaw>
 			<cmd>
-				<alt>-5</alt>
-				<flch-accel>1.5</flch-accel>
-				<roll>1.6</roll>
+				<alt>-5</alt> <!-- Altitude deviation gain -->
+				<flch-accel>1.5</flch-accel> <!-- Level change accel/decel limit -->
+				<roll>1.6</roll> <!-- Roll heading deviation base gain -->
 			</cmd>
-			<autoland> 
-				<pitch-kp>0.0051</pitch-kp>
-				<yaw-kp>-0.05</yaw-kp>
-			</autoland>
 			<rollout>
-				<roll-kp>-0.1</roll-kp>
-				<pitch-nose>0.1</pitch-nose>
-				<pitch-rate>-1.5</pitch-rate>
-				<yaw-kp>-0.02</yaw-kp>
+				<aileron>-0.1</aileron> <!-- Aileron to counter wind-induced banking on ground -->
+				<pitch-nose>0.1</pitch-nose> <!-- Forward pressure to keep nose gear on ground -->
+				<pitch-rate>-1.5</pitch-rate> <!-- Rate to lower nose to ground after touchdown -->
 			</rollout>
 		</config>
 		<settings>
 			<accel-ft type="double">1000</accel-ft> <!-- Acceleration AGL when T/O CLB changes to SPD CLB, 0 to disable -->
+			<align-ft type="int">150</align-ft> <!-- AGL when ALIGN engages during autoland -->
 			<auto-bank-limit-calc type="bool">1</auto-bank-limit-calc> <!-- Disable to add a custom auto bank limit schedule -->
 			<auto-system-reset type="bool">1</auto-system-reset> <!-- Automatically reset the system after landing -->
-			<autoland-without-ap type="bool">1</autoland-without-ap> <!-- Engage autoland guidance even if the AP is off -->
+			<autoland-without-ap type="bool">0</autoland-without-ap> <!-- Allows FLARE and ROLLOUT pitch modes to engage even if AP is off -->
 			<autothrottle-max type="double">0.95</autothrottle-max> <!-- Thrust max limit normalized -->
 			<autothrottle-min type="double">0.02</autothrottle-min> <!-- Thrust low limit normalized -->
 			<bank-max-deg type="double">25</bank-max-deg> <!-- Maximum bank limit -->
@@ -50,7 +45,7 @@ See wiki for details on parameters.
 			<fd-takeoff-deg type="double">7.5</fd-takeoff-deg> <!-- Adjust Flight Director pitch bar in T/O CLB on ground -->
 			<ground-mode-select type="bool">0</ground-mode-select> <!-- Allow modes to be selected when on ground -->
 			<hdg-hld-separate type="bool">0</hdg-hld-separate> <!-- Separates HDG HLD mode from HDG SEL mode -->
-			<land-enable type="bool">1</land-enable> <!-- Enable/Disable Autoland -->
+			<land-enable type="bool">1</land-enable> <!-- Enable/Disable autoland -->
 			<land-flap type="double">0.7</land-flap> <!-- Minimum Flap used for landing -->
 			<lnav-ft type="double">50</lnav-ft> <!-- AGL when LNAV becomes active if armed -->
 			<max-kts type="int">380</max-kts> <!-- Maxmimum target airspeed in knots -->
