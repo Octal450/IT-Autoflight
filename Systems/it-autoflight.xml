@@ -277,7 +277,7 @@
 		<input>
 			<condition>
 				<equals>
-					<property>/it-autoflight/mode/vert</property>
+					<property>/it-autoflight/text/vert</property>
 					<value>T/O CLB</value>
 				</equals>
 			</condition>
@@ -2858,7 +2858,7 @@
 		<input>
 			<condition>
 				<equals>
-					<property>/it-autoflight/mode/vert</property>
+					<property>/it-autoflight/text/vert</property>
 					<value>T/O CLB</value>
 				</equals>
 			</condition>

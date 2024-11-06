@@ -147,7 +147,7 @@
 			<col>1</col>
 			<visible>
 				<equals>
-					<property>/it-autoflight/mode/thr</property>
+					<property>/it-autoflight/text/thr</property>
 					<value>THR LIM</value>
 				</equals>
 			</visible>
@@ -160,7 +160,7 @@
 			<col>1</col>
 			<visible>
 				<equals>
-					<property>/it-autoflight/mode/thr</property>
+					<property>/it-autoflight/text/thr</property>
 					<value>IDLE</value>
 				</equals>
 			</visible>
@@ -173,7 +173,7 @@
 			<col>1</col>
 			<visible>
 				<equals>
-					<property>/it-autoflight/mode/thr</property>
+					<property>/it-autoflight/text/thr</property>
 					<value>RETARD</value>
 				</equals>
 			</visible>
@@ -187,15 +187,15 @@
 			<visible>
 				<and>
 					<not-equals>
-						<property>/it-autoflight/mode/thr</property>
+						<property>/it-autoflight/text/thr</property>
 						<value>THR LIM</value>
 					</not-equals>
 					<not-equals>
-						<property>/it-autoflight/mode/thr</property>
+						<property>/it-autoflight/text/thr</property>
 						<value>IDLE</value>
 					</not-equals>
 					<not-equals>
-						<property>/it-autoflight/mode/thr</property>
+						<property>/it-autoflight/text/thr</property>
 						<value>RETARD</value>
 					</not-equals>
 				</and>
@@ -203,7 +203,7 @@
 			<border>1</border>
 			<label>999999</label>
 			<valign>center</valign>
-			<property>/it-autoflight/mode/thr</property>
+			<property>/it-autoflight/text/thr</property>
 			<live>1</live>
 		</text>
 		
@@ -289,7 +289,7 @@
 			<border>1</border>
 			<label>9999</label>
 			<valign>center</valign>
-			<property>/it-autoflight/mode/lat</property>
+			<property>/it-autoflight/text/lat</property>
 			<live>1</live>
 		</text>
 		
@@ -304,7 +304,7 @@
 			<border>1</border>
 			<label>99999999</label>
 			<valign>center</valign>
-			<property>/it-autoflight/mode/vert</property>
+			<property>/it-autoflight/text/vert</property>
 			<live>1</live>
 		</text>
 	</group>

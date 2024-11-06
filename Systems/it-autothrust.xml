@@ -233,7 +233,7 @@
 		<input>
 			<condition>
 				<equals>
-					<property>/it-autoflight/mode/spd</property>
+					<property>/it-autoflight/text/spd</property>
 					<value>RETARD</value>
 				</equals>
 			</condition>
@@ -285,7 +285,7 @@
 				<or>
 					<and>
 						<equals>
-							<property>/it-autoflight/mode/spd</property>
+							<property>/it-autoflight/text/spd</property>
 							<value>RETARD</value>
 						</equals>
 						<or>
