@@ -14,6 +14,8 @@ V4.1.0:
 * Fixed: Various logic controller bugs
 * Changed: Align can no longer engage without AP
 * Changed: Improved autoland flare law
+* Changed: ALGN lateral mode has been renamed ALIGN
+* Changed: RLOU lateral mode has been renamed ROLLOUT to match vertical
 
 V4.0.9:
 [Control Loop]
