@@ -6,16 +6,21 @@ I will note if new ITAF tuning or config is required. Simply check the "ITAF CON
 
 V4.1.0:
 [Control Loop]
+* Added: Separate G/A CLB mode
 * Added: New ALIGN control yaw for autoland (New config required)
 * Added: New ROLLOUT control law for autoland (New config required)
 * Added: Improved FLARE law for autoland
 
 [Logic]
+* Added: Separate G/A CLB mode
 * Fixed: Various logic controller bugs
+* Changed: Basic pitch mode is now mode 10
 * Changed: Align can no longer engage without AP
 * Changed: Improved autoland flare law
 * Changed: ALGN lateral mode has been renamed ALIGN
 * Changed: RLOU lateral mode has been renamed ROLLOUT to match vertical
+
+---------------------------------------------------------------------------------------------------------------------
 
 V4.0.9:
 [Control Loop]
