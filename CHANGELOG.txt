@@ -9,7 +9,8 @@ V4.1.0:
 * Added: Separate G/A CLB mode
 * Added: New ALIGN control yaw for autoland (New config required)
 * Added: New ROLLOUT control law for autoland (New config required)
-* Added: Improved FLARE law for autoland
+* Added: Improved FLARE law for Autoland
+* Changed: FPA mode improved
 
 [Logic]
 * Added: Separate G/A CLB mode
