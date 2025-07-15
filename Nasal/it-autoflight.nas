@@ -61,6 +61,7 @@ var Orientation = {
 };
 
 var Position = {
+	altSwitchTemp: 0,
 	gearAglFt: props.globals.getNode("/position/gear-agl-ft", 1),
 	gearAglFtTemp: 0,
 	indicatedAltitudeFt: props.globals.getNode("/instrumentation/altimeter/indicated-altitude-ft", 1),
@@ -211,6 +212,7 @@ var Text = {
 };
 
 var Settings = {
+	accelAgl: props.globals.getNode("/it-autoflight/settings/accel-agl", 1),
 	accelFt: props.globals.getNode("/it-autoflight/settings/accel-ft", 1),
 	alignFt: props.globals.getNode("/it-autoflight/settings/align-ft", 1),
 	autoBankLimitCalc: props.globals.getNode("/it-autoflight/settings/auto-bank-limit-calc", 1),
@@ -1040,7 +1042,13 @@ var ITAF = {
 		}
 	},
 	checkFlch: func(a) {
-		if (!Gear.wow1.getBoolValue() and !Gear.wow2.getBoolValue() and Position.gearAglFt.getValue() >= a and a != 0) {
+		if (Settings.accelAgl.getBoolValue()) {
+			Position.altSwitchTemp = Position.gearAglFt.getValue();
+		} else {
+			Position.altSwitchTemp = Position.indicatedAltitudeFt.getValue();
+		}
+		
+		if (!Gear.wow1.getBoolValue() and !Gear.wow2.getBoolValue() and Position.altSwitchTemp >= a and a != 0) {
 			me.setVertMode(4);
 		}
 	},
