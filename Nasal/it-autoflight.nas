@@ -107,6 +107,7 @@ var Input = {
 	ap3Temp: 0,
 	athr: props.globals.initNode("/it-autoflight/input/athr", 0, "BOOL"),
 	athrAvail: props.globals.initNode("/it-autoflight/input/athr-avail", 1, "BOOL"),
+	athrServoClamp: props.globals.initNode("/it-autoflight/input/athr-servo-clamp", 0, "BOOL"),
 	athrTemp: 0,
 	bankLimitSw: props.globals.initNode("/it-autoflight/input/bank-limit-sw", 0, "INT"),
 	bankLimitSwTemp: 0,
@@ -283,6 +284,7 @@ var ITAF = {
 		Input.ap2.setBoolValue(0);
 		Input.ap3.setBoolValue(0);
 		Input.athr.setBoolValue(0);
+		Input.athrServoClamp.setBoolValue(0);
 		if (t != 1) {
 			Input.fd1.setBoolValue(Settings.fdStartsOn.getBoolValue());
 			Input.fd2.setBoolValue(Settings.fdStartsOn.getBoolValue());
