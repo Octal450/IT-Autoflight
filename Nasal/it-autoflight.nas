@@ -942,6 +942,7 @@ var ITAF = {
 		Output.vertTemp = Output.vert.getValue();
 		if (Output.athr.getBoolValue() and Output.vertTemp != 7 and Settings.retardEnable.getBoolValue() and Position.gearAglFt.getValue() <= Settings.retardAltitude.getValue() and Misc.flapNorm.getValue() >= Settings.landFlap.getValue() - 0.001) {
 			Output.thrMode.setValue(1);
+			Input.athrServoClamp.setBoolValue(0); # Always unclamp during RETARD
 			Text.spd.setValue("RETARD");
 			Text.thr.setValue("RETARD");
 			if (Gear.wow1.getBoolValue() or Gear.wow2.getBoolValue()) { # Disconnect A/THR on either main gear touch
@@ -961,14 +962,22 @@ var ITAF = {
 			if (Internal.alt.getValue() >= Position.indicatedAltitudeFt.getValue()) {
 				Output.thrMode.setValue(2);
 				Text.spd.setValue("PITCH");
-				Text.thr.setValue("THR LIM");
+				if (Input.athrServoClamp.getBoolValue()) {
+					Text.thr.setValue("CLAMP");
+				} else {
+					Text.thr.setValue("THR LIM");
+				}
 				if (Internal.flchActive and Text.vert.getValue() != "SPD CLB") {
 					me.updateVertText("SPD CLB");
 				}
 			} else {
 				Output.thrMode.setValue(1);
 				Text.spd.setValue("PITCH");
-				Text.thr.setValue("IDLE");
+				if (Input.athrServoClamp.getBoolValue()) {
+					Text.thr.setValue("CLAMP");
+				} else {
+					Text.thr.setValue("IDLE");
+				}
 				if (Internal.flchActive and Text.vert.getValue() != "SPD DES") {
 					me.updateVertText("SPD DES");
 				}
@@ -976,11 +985,17 @@ var ITAF = {
 		} else if (Output.vertTemp == 7 or Output.vertTemp == 8) {
 			Output.thrMode.setValue(2);
 			Text.spd.setValue("PITCH");
-			Text.thr.setValue("THR LIM");
+			if (Input.athrServoClamp.getBoolValue()) {
+				Text.thr.setValue("CLAMP");
+			} else {
+				Text.thr.setValue("THR LIM");
+			}
 		} else {
 			Output.thrMode.setValue(0);
 			Text.spd.setValue("THRUST");
-			if (Input.ktsMach.getBoolValue()) {
+			if (Input.athrServoClamp.getBoolValue()) {
+				Text.thr.setValue("CLAMP");
+			} else if (Input.ktsMach.getBoolValue()) {
 				Text.thr.setValue("MACH");
 			} else {
 				Text.thr.setValue("SPEED");

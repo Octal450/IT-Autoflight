@@ -10,10 +10,13 @@ V4.1.0:
 * Added: New ALIGN control yaw for autoland (New config required)
 * Added: New ROLLOUT control law for autoland (New config required)
 * Added: Improved FLARE law for Autoland
+* Added: Add THR HOLD/CLAMP option
 * Changed: FPA mode improved
 
 [Logic]
 * Added: Separate G/A CLB mode
+* Added: Option to select Altimeter/AGL for acceleration (New config required)
+
 * Fixed: Various logic controller bugs
 * Changed: Basic pitch mode is now mode 10
 * Changed: Align can no longer engage without AP
