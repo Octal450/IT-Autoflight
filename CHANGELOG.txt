@@ -17,6 +17,8 @@ V4.1.0:
 * Added: Separate G/A CLB mode
 * Added: Option to select Altimeter/AGL for acceleration (New config required)
 
+[GUI]
+* Added: CLAMP is now shown when enabled
 * Fixed: Various logic controller bugs
 * Changed: Basic pitch mode is now mode 10
 * Changed: Align can no longer engage without AP
