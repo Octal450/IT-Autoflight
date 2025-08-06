@@ -55,8 +55,8 @@ See wiki for details on parameters.
 			<lnav-ft type="double">50</lnav-ft> <!-- AGL when LNAV becomes active if armed -->
 			<max-kts type="int">380</max-kts> <!-- Maxmimum target airspeed in knots -->
 			<max-mach type="double">0.9</max-mach> <!-- Maxmimum target mach number -->
-			<retard-enable type="bool">1</retard-enable> <!-- AGL to enter Thrust Retard mode -->
-			<retard-ft type="double">50</retard-ft> <!-- Enable Thrust Retard mode -->
+			<retard-enable type="bool">1</retard-enable> <!-- Enable Thrust Retard mode -->
+			<retard-ft type="double">50</retard-ft> <!-- AGL to enter Thrust Retard mode -->
 			<stall-aoa-deg type="double">15</stall-aoa-deg> <!-- Angle of attack where AP trips off -->
 			<takeoff-hdg-cap type="double">5</takeoff-hdg-cap> <!-- Maximum bank to capture current hdg in T/O mode -->
 			<toga-spd type="double">160</toga-spd> <!-- V2 + 10kts -->
