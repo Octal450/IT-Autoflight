@@ -295,7 +295,7 @@
 			</condition>
 		</enable>
 		<input>/it-autoflight/internal/throttle-cmd</input>
-		<output>/it-autoflight/internal/throttle</output>
+		<output>/it-autoflight/internal/throttle-main</output>
 		<max-rate-of-change>
 			<condition>
 				<or>
@@ -379,7 +379,7 @@
 			</condition>
 		</enable>
 		<input>/it-autoflight/internal/throttle-compare-max</input>
-		<output>/it-autoflight/internal/throttle</output>
+		<output>/it-autoflight/internal/throttle-main</output>
 	</filter>
 	
 	<!-- Engine 1 -->
@@ -394,7 +394,7 @@
 					<value>1</value>
 				</equals>
 			</condition>
-			<property>/it-autoflight/internal/throttle</property>
+			<property>/it-autoflight/internal/throttle-main</property>
 		</input>
 		<input>/controls/engines/engine[0]/throttle</input>
 		<output>/it-autoflight/internal/throttle[0]</output>
@@ -444,7 +444,7 @@
 					<value>1</value>
 				</equals>
 			</condition>
-			<property>/it-autoflight/internal/throttle</property>
+			<property>/it-autoflight/internal/throttle-main</property>
 		</input>
 		<input>/controls/engines/engine[1]/throttle</input>
 		<output>/it-autoflight/internal/throttle[1]</output>
@@ -494,7 +494,7 @@
 					<value>1</value>
 				</equals>
 			</condition>
-			<property>/it-autoflight/internal/throttle</property>
+			<property>/it-autoflight/internal/throttle-main</property>
 		</input>
 		<input>/controls/engines/engine[2]/throttle</input>
 		<output>/it-autoflight/internal/throttle[2]</output>
@@ -544,7 +544,7 @@
 					<value>1</value>
 				</equals>
 			</condition>
-			<property>/it-autoflight/internal/throttle</property>
+			<property>/it-autoflight/internal/throttle-main</property>
 		</input>
 		<input>/controls/engines/engine[3]/throttle</input>
 		<output>/it-autoflight/internal/throttle[3]</output>
@@ -594,7 +594,7 @@
 					<value>1</value>
 				</equals>
 			</condition>
-			<property>/it-autoflight/internal/throttle</property>
+			<property>/it-autoflight/internal/throttle-main</property>
 		</input>
 		<input>/controls/engines/engine[4]/throttle</input>
 		<output>/it-autoflight/internal/throttle[4]</output>
@@ -644,7 +644,7 @@
 					<value>1</value>
 				</equals>
 			</condition>
-			<property>/it-autoflight/internal/throttle</property>
+			<property>/it-autoflight/internal/throttle-main</property>
 		</input>
 		<input>/controls/engines/engine[5]/throttle</input>
 		<output>/it-autoflight/internal/throttle[5]</output>
@@ -694,7 +694,7 @@
 					<value>1</value>
 				</equals>
 			</condition>
-			<property>/it-autoflight/internal/throttle</property>
+			<property>/it-autoflight/internal/throttle-main</property>
 		</input>
 		<input>/controls/engines/engine[6]/throttle</input>
 		<output>/it-autoflight/internal/throttle[6]</output>
@@ -744,7 +744,7 @@
 					<value>1</value>
 				</equals>
 			</condition>
-			<property>/it-autoflight/internal/throttle</property>
+			<property>/it-autoflight/internal/throttle-main</property>
 		</input>
 		<input>/controls/engines/engine[7]/throttle</input>
 		<output>/it-autoflight/internal/throttle[7]</output>
