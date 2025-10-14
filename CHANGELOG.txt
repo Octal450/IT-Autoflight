@@ -16,6 +16,7 @@ V4.1.0:
 [Logic]
 * Added: Separate G/A CLB mode
 * Added: Option to select Altimeter/AGL for acceleration (New config required)
+* Fixed: Autoland logic
 
 [GUI]
 * Added: CLAMP is now shown when enabled
