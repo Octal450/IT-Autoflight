@@ -3,7 +3,10 @@
 # Copyright (c) 2025 Josh Davidson (Octal450)
 
 var UpdateFma = {
+	gsArm: 0,
 	latText: "T/O",
+	lnavArm: 0,
+	locArm: 0,
 	spdText: "PITCH",
 	thrText: "THR LIM",
 	vertText: "T/O CLB",
@@ -12,9 +15,9 @@ var UpdateFma = {
 		me.thrText = Text.thr.getValue();
 	},
 	arm: func() { # Called when armed modes change
-		Output.lnavArm.getBoolValue();
-		Output.locArm.getBoolValue();
-		Output.gsArm.getBoolValue();
+		me.gsArm = Output.gsArm.getBoolValue();
+		me.lnavArm = Output.lnavArm.getBoolValue();
+		me.locArm = Output.locArm.getBoolValue();
 	},
 	lat: func() { # Called when lateral mode changes
 		me.latText = Text.lat.getValue();
