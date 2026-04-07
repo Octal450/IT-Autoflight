@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- Copyright (c) 2025 Josh Davidson (Octal450) -->
+<!-- Copyright (c) 2026 Josh Davidson (Octal450) -->
 
 <PropertyList>
 	
@@ -36,7 +36,7 @@
 		<object-name>HdgHld</object-name>
 		<object-name>HdgSel</object-name>
 		<object-name>IasMach</object-name>
-		<object-name>ILS</object-name>
+		<object-name>Ils</object-name>
 		<object-name>Lnav</object-name>
 		<object-name>Loc</object-name>
 		<object-name>Toga</object-name>
@@ -56,7 +56,7 @@
 		<condition>
 			<or>
 				<property>it-autoflight/output/fd1</property>
-				<property>controls/test/warn-knob</property>
+				<property>controls/switches/annun-test</property>
 			</or>
 		</condition>
 	</animation>
@@ -66,7 +66,7 @@
 		<condition>
 			<or>
 				<property>it-autoflight/output/athr</property>
-				<property>controls/test/warn-knob</property>
+				<property>controls/switches/annun-test</property>
 			</or>
 		</condition>
 	</animation>
@@ -76,7 +76,7 @@
 		<condition>
 			<or>
 				<property>it-autoflight/output/ap1</property>
-				<property>controls/test/warn-knob</property>
+				<property>controls/switches/annun-test</property>
 			</or>
 		</condition>
 	</animation>
@@ -86,7 +86,7 @@
 		<condition>
 			<or>
 				<property>it-autoflight/output/ap2</property>
-				<property>controls/test/warn-knob</property>
+				<property>controls/switches/annun-test</property>
 			</or>
 		</condition>
 	</animation>
@@ -96,7 +96,7 @@
 		<condition>
 			<or>
 				<property>it-autoflight/output/fd2</property>
-				<property>controls/test/warn-knob</property>
+				<property>controls/switches/annun-test</property>
 			</or>
 		</condition>
 	</animation>
