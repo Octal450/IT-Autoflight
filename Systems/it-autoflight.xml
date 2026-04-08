@@ -1160,7 +1160,7 @@
 	</filter>
 	
 	<filter>
-		<name>System Command: Roll Target Inactive Sync</name>
+		<name>System Command: Target Roll Inactive Sync</name>
 		<type>gain</type>
 		<gain>1.0</gain>
 		<enable>
@@ -1206,11 +1206,11 @@
 			</condition>
 			<value>15</value>
 		</max-rate-of-change>
-		<max-rate-of-change>6</max-rate-of-change>
+		<max-rate-of-change>5</max-rate-of-change>
 	</filter>
 	
 	<filter>
-		<name>System Command: Roll Rate Target</name>
+		<name>System Command: Target Roll Rate</name>
 		<type>gain</type>
 		<gain>-0.9</gain>
 		<enable>
@@ -2114,7 +2114,7 @@
 	</pid-controller>
 	
 	<filter>
-		<name>System Command: Pitch Target Inactive Sync</name>
+		<name>System Command: Target Pitch Inactive Sync</name>
 		<type>gain</type>
 		<gain>1.0</gain>
 		<enable>
@@ -2181,7 +2181,7 @@
 	</filter>
 	
 	<filter>
-		<name>System Command: Pitch Rate Target</name>
+		<name>System Command: Target Pitch Rate</name>
 		<type>gain</type>
 		<gain>-0.6</gain>
 		<enable>
@@ -2533,7 +2533,7 @@
 	</filter>
 	
 	<filter>
-		<name>IT-CONTROLLER: Align/Rollout Yaw Rate Target</name>
+		<name>IT-CONTROLLER: Align/Rollout Target Yaw Rate</name>
 		<type>gain</type>
 		<gain>1.0</gain>
 		<input>
