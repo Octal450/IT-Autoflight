@@ -8,8 +8,8 @@ V4.1.0:
 [Control Loop]
 * Added: Separate G/A CLB mode
 * Added: New ALIGN control loop for autoland (New config required)
-* Added: New ROLLOUT control loop for autoland (New config required)
-* Added: Improved FLARE law for Autoland
+* Added: New ROLLOUT roll and yaw control loop for autoland (New config required)
+* Added: Improved FLARE pitch law for Autoland
 * Added: Add THR HOLD/CLAMP option
 * Added: New autothrottle control loop
 * Changed: FPA mode improved
