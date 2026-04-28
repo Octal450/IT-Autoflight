@@ -34,8 +34,8 @@ The roll/yaw modes used by the autopilot.
 * HDG: A set heading is being tracked. The behavior of the mode can be heading select or heading hold based on pilot selection and user configurable behavior.
 * LNAV: A GPS route is being tracked.
 * LOC: A VOR or ILS localizer is being tracked.
-* ALGN: Crab angle is removed to align with the runway and bank angle applied to maintain the ILS localizer. (V4.1.0 only, changing to ALIGN)
-* RLOU: Crosswind aileron is applied, and the rudder is used to keep the aircraft on the centerline during rollout (V4.1.0 changing to ROLLOUT).
+* ALGN: Crab angle is removed to align with the runway and bank angle applied to maintain the ILS localizer.
+* RLOU: Crosswind aileron is applied, and the rudder is used to keep the aircraft on the centerline during rollout.
 * T/O: A takeoff heading is being tracked, or the wings are being kept level, based on user configurable behavior.
 * ROLL: A set bank angle is being held.
 * Blank: No roll/yaw mode is active.
@@ -67,7 +67,6 @@ The modes used by the autothrottle. Autothrottle modes are coupled to the vertic
 * IDLE: The throttles are slowly driven to the idle stop for speed on pitch descends.
 * RETARD: The throttles are slowly driven to the idle stop for when under a user configurable radio altitude for the landing flare. On touchdown, they are driven to the idle stop at a faster speed.
 * THR LIM: The throttles are slowly driven to the thrust limit for speed on pitch climbs. In takeoff or go around modes, the throttles are driven to the thrust limit at a faster speed.
-* CLAMP: The throttle servos are not being moved and the levers can be adjusted by the pilot. (V4.1.0 only)
 
 ## Installation Instructions
 
@@ -206,8 +205,6 @@ You can view the Config Module [here](https://github.com/Octal450/IT-Autoflight/
 
 This area is for the tuning of the PID controllers used. These are not hard coded, so users can update IT Autoflight without needing to edit any files. You can also adjust these in the property browser, and they take affect immediately, without needing to reload anything.
 
-> Note  Tuning parameters are changing in V4.1.0, see [the Config Module in the dev branch](https://github.com/Octal450/IT-Autoflight/blob/dev/ITAF%20CONFIG.txt) for details.
-
 #### `config/roll`
 
 These adjust the parameters for the Roll Rate PID Controller.
@@ -248,9 +245,7 @@ These adjust the parameters for the PIDs used for Autoland Rollout. Tune Roll, P
 
 #### `settings`
 
-* `accel-agl`: Define whether to use the altimeter (0) or AGL altitude (1) for acceleration altitude. (V4.1.0 only)
 * `accel-ft`: Define the altitude when the pitch mode changes from T/O CLB to SPD CLB (known as acceleration altitude).
-* `align-ft`: Define the altitude when the ALIGN lateral mode engages during an autoland. (V4.1.0 only)
 * `auto-bank-limit-calc`: Disable (0) or Enable (1) calculation of the auto bank limit, when disabled, you can drive `/it-autoflight/internal/bank-limit-auto` with your own.
 * `auto-system-reset`: Disable (0) or Enable (1) the system automatically resetting after landing.
 * `autoland-without-ap`: Allows autoland guidance modes to be armed and become active even if AP1 and AP2 are off.
@@ -332,7 +327,6 @@ This section will discuss the inputs and outputs of IT Autoflight. These can be 
 * `fpa`: Adjusts the Target Flight Path Angle in degrees (-9.9 - 9.9). DOUBLE. (Note: IT Autoflight can use higher/lower FPA.)
 * `fpa-abs`: Automatically set by IT Autoflight. Absolute value of the fpa input, used for fixing problems when animating cockpit controls. DOUBLE.
 * `hdg`: Adjusts the Target Heading in degrees (1 - 360, or 0 - 359). INT.
-* `inhibit-alt-cap`: Allow (0) or disallow (1) altitude capture when in V/S or FPA modes. BOOL, V4.1.0 only.
 * `kts`: Adjusts the Target Airspeed in Knots (100 - 350 by default). INT. (Note: IT Autoflight can use higher/lower airspeed.)
 * `kts-mach`: Switches between Speed (0) and Mach mode (1). BOOL.
 * `lat`: Changes the lateral mode to HDG SEL (0), LNAV (1), VOR/LOC (2), HDG HLD (3), ROLL (6), Blank (9). INT. (Note: Mode 4 and 5 exist, but only engaged by the controller automatically, do not set to these values.)
@@ -349,7 +343,8 @@ This section will discuss the inputs and outputs of IT Autoflight. These can be 
 * `vert`: Changes the vertical mode to ALT HLD (0), V/S (1), ILS (2), FLCH (4), FPA (5), Blank (9), PITCH (10). INT. (Note: Mode 3, 6, 7, and 8 exist, but only engaged by the controller automatically, do not set to these values.)
 * `vs`: Adjusts the Target Vertical Speed in feet per minute (-6000 -6000). INT (Note: IT Autoflight can use higher/lower FPM).
 * `vs-abs`: Automatically set by IT Autoflight. Absolute value of the vs input, used for fixing problems when animating cockpit controls. INT.
-* `Internal`: /it-autoflight/internal
+
+#### Internal: `/it-autoflight/internal`
 
 > Note: DO NOT set ANY of these values!!! This WILL cause a malfunction! Only read from them.
 
@@ -359,7 +354,8 @@ This section will discuss the inputs and outputs of IT Autoflight. These can be 
 * `rudder`: Rudder servo output used when not using /controls/flight.
 * `throttle[n]`: Throttle servo output used when not using /controls/engines, where n is 0 through 7 (engines 1-8).
 * `vert-speed-fpm`: IT Autoflight's internal vertical speed computer.
-* `Output`: /it-autoflight/output
+
+#### Output: `/it-autoflight/output`
 
 > Note: DO NOT set ANY of these values!!! This WILL cause a malfunction! Only read from them. These values are the output of the logic controller, if a value you need is not here, then it does not go through the logic controller.
 
@@ -376,11 +372,8 @@ This section will discuss the inputs and outputs of IT Autoflight. These can be 
 * `loc-arm`: VOR/LOC: Disarmed (0), or Armed (1).
 * `vert`: Active vertical mode: ALT HLD/CAP (0), V/S (1), G/S (2), FLCH (4), FPA (5), FLARE/ROLLOUT (6), T/O CLB (7), G/A CLB (8), Blank (9), PITCH (10). (Note: Mode 3 is reserved and not used.)
 * `thr-mode`: Thrust System Mode: THRUST (0), PITCH Idle/RETARD (1), or PITCH Thrust Limit (2). (Note: PITCH Idle/RETARD commands the Autothrottle to Idle limit thrust, and PITCH Thrust Limit commands the Autothrottle to use set the thrust to the active thrust limit, like CLB, MCT, TOGA, etc.)
-* `Text Outputs`: /it-autoflight/mode
 
-> Note: In V4.1.0, this is changing to /it-autoflight/text
-
-> Note: In V4.1.0, ALGN becomes ALIGN and RLOU becomes ROLLOUT
+#### Text Outputs: `/it-autoflight/mode`
 
 Blank modes will display a blank string as an annunciator.
 
