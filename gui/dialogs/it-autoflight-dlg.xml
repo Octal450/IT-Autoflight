@@ -388,7 +388,6 @@
 		<button>
 			<row>0</row>
 			<col>5</col>
-			<halign>left</halign>
 			<pref-width>25</pref-width>
 			<pref-height>25</pref-height>
 			<legend>&gt;&gt;</legend>
@@ -482,7 +481,6 @@
 		<button>
 			<row>1</row>
 			<col>5</col>
-			<halign>left</halign>
 			<pref-width>25</pref-width>
 			<pref-height>25</pref-height>
 			<legend>&gt;&gt;</legend>
@@ -623,7 +621,6 @@
 		<button>
 			<row>0</row>
 			<col>5</col>
-			<halign>left</halign>
 			<pref-width>25</pref-width>
 			<pref-height>25</pref-height>
 			<legend>&gt;&gt;</legend>
@@ -936,7 +933,6 @@
 		<button>
 			<row>0</row>
 			<col>5</col>
-			<halign>left</halign>
 			<pref-width>25</pref-width>
 			<pref-height>25</pref-height>
 			<legend>&gt;&gt;</legend>
@@ -1040,7 +1036,6 @@
 		<button>
 			<row>1</row>
 			<col>5</col>
-			<halign>left</halign>
 			<pref-width>25</pref-width>
 			<pref-height>25</pref-height>
 			<legend>&gt;&gt;</legend>
@@ -1138,7 +1133,6 @@
 		<button>
 			<row>2</row>
 			<col>5</col>
-			<halign>left</halign>
 			<pref-width>25</pref-width>
 			<pref-height>25</pref-height>
 			<legend>&gt;&gt;</legend>
