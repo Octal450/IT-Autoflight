@@ -106,6 +106,7 @@ If you wish to use the IT Autoflight default autothrottle, add the following ins
 
 If you are using a JSBsim aircraft:
 
+* This is only required if the aircraft DOES NOT already compute the property ``/position/gear-agl-ft``.
 * Copy the Systems folder from inside the JSBsim Only folder in the IT Autoflight folder to the aircraft's folder. Overwrite any conflicts.
 * Then, add the following inside ``<systems></systems>``:
 
