@@ -1,6 +1,6 @@
 # IT Autoflight
 
-The **IT Autoflight System** is a modular, light, and advanced airliner autoflight framework for FlightGear. The purpose of the system is to provide a system for other airliner developers to use as a stable base for their autopilots. Examples of custom IT Autoflight System installations are shown off in the [MD-11](https://github.com/Octal450/MD-11) amongst others. IT Autoflight is a component of IntegratedSystems.
+The **IT Autoflight System** is a modular, light, and advanced airliner autoflight framework for FlightGear. The purpose of the system is to provide a system for other airliner developers to use as a stable base for their autopilots. Examples of custom IT Autoflight System installations are shown off in the [MD-11](https://github.com/Octal450/MD-11) amongst others. IT Autoflight is a component of [IntegratedSystems](https://wiki.flightgear.org/IntegratedSystems).
 
 ## Available Modes
 
@@ -80,26 +80,27 @@ Download the latest version of IT Autoflight V4.0.X from [here](https://github.c
 
 ### Installation
 
+#### Steps
 * Copy the gui, Systems, and Nasal folders from the IT Autoflight folder to the aircraft's folder. Overwrite any conflicts.
 * You may need to remove old autopilot dialogs for the IT Autoflight dialog to appear. Look inside the Systems and gui/dialogs folders.
 * Open the -set file of the aircraft, and find the ``<systems>`` area inside ``<sim></sim>``.
 * Add the following inside ``<systems></systems>``
 
-   ```xml
-   <autopilot n="0">
-      <name>IT Autoflight</name>
-      <path>Systems/it-autoflight.xml</path>
-   </autopilot>
-   ```
+```xml
+	<autopilot n="0">
+		<name>IT Autoflight</name>
+		<path>Systems/it-autoflight.xml</path>
+	</autopilot>
+```
 
-   If you wish to use the IT Autoflight default autothrottle, add the following inside ``<systems></systems>``:
+If you wish to use the IT Autoflight default autothrottle, add the following inside ``<systems></systems>``:
 
-   ```xml
-   <autopilot>
-      <name>IT Autothrust</name>
-      <path>Systems/it-autothrust.xml</path>
-   </autopilot>
-   ```
+```xml
+	<autopilot>
+		<name>IT Autothrust</name>
+		<path>Systems/it-autothrust.xml</path>
+	</autopilot>
+```
 
 * If you do not add this, the A/T button in the IT Autoflight GUI Dialog will do nothing, and in PITCH mode, the pilot must adjust the throttles accordingly. You do NOT need to add this if your aircraft uses a customized autothrottle, as long as that autothrottle is compatible with IT Autoflight. See the [Interface Reference](#interface-reference) section below for more information.
 
@@ -108,12 +109,12 @@ If you are using a JSBsim aircraft:
 * Copy the Systems folder from inside the JSBsim Only folder in the IT Autoflight folder to the aircraft's folder. Overwrite any conflicts.
 * Then, add the following inside ``<systems></systems>``:
 
-   ```xml
-   <autopilot>
-      <name>Gear AGL FT</name>
-      <path>Systems/gear-agl-ft.xml</path>
-   </autopilot>
-   ```
+```xml
+	<autopilot>
+		<name>Gear AGL FT</name>
+		<path>Systems/gear-agl-ft.xml</path>
+	</autopilot>
+```
 
 * Note: You may need to adjust the value inside the gear-agl-ft.xml to match your aircraft. You can find the value by looking at /position/altitude-agl-ft property.
 
@@ -122,76 +123,77 @@ Now to add the IT Autoflight controller:
 * Find the ``<nasal>`` area, which is outside ``<sim></sim>``.
 * Add the following inside ``<nasal></nasal>``:
 
-   ```xml
-   <itaf>
-      <file>Nasal/it-autoflight.nas</file>
-   </itaf>
-   ```
+```xml
+	<itaf>
+		<file>Nasal/it-autoflight.nas</file>
+	</itaf>
+```
 
+#### Configuration Module
 * Finally, add the following anywhere outside ``<sim></sim>``. This is the default IT Autoflight Configuration. We will be adjusting this later.
 
-   ```xml
-   <it-autoflight>
-      <config>
-         <roll>
-            <kp-low>0.11</kp-low> <!-- Kp at low speed -->
-            <kp-high>0.05</kp-high> <!-- Kp at high speed -->
-            <ti>1.0</ti>
-            <td>0.0001</td>
-         </roll>
-         <pitch>
-            <kp-low>-0.14</kp-low> <!-- Kp at low speed -->
-            <kp-high>-0.06</kp-high> <!-- Kp at high speed -->
-            <ti>0.5</ti>
-            <td>0.001</td>
-         </pitch>
-         <cmd>
-            <alt>-5</alt>
-            <flch-accel>1.5</flch-accel>
-            <roll>1.6</roll>
-         </cmd>
-         <autoland> 
-            <pitch-kp>0.0051</pitch-kp>
-            <yaw-kp>-0.05</yaw-kp>
-         </autoland>
-         <rollout>
-            <roll-kp>-0.1</roll-kp>
-            <pitch-nose>0.1</pitch-nose>
-            <pitch-rate>-1.5</pitch-rate>
-            <yaw-kp>-0.02</yaw-kp>
-         </rollout>
-      </config>
-      <settings>
-         <accel-ft type="double">1000</accel-ft> <!-- Acceleration AGL when T/O CLB changes to SPD CLB, 0 to disable -->
-         <auto-bank-limit-calc type="bool">1</auto-bank-limit-calc> <!-- Disable to add a custom auto bank limit schedule -->
-         <auto-system-reset type="bool">1</auto-system-reset> <!-- Automatically reset the system after landing -->
-         <autoland-without-ap type="bool">1</autoland-without-ap> <!-- Engage autoland guidance even if the AP is off -->
-         <autothrottle-max type="double">0.95</autothrottle-max> <!-- Thrust max limit normalized -->
-         <autothrottle-min type="double">0.02</autothrottle-min> <!-- Thrust low limit normalized -->
-         <bank-max-deg type="double">25</bank-max-deg> <!-- Maximum bank limit -->
-         <custom-fma type="bool">0</custom-fma> <!-- Call functions when modes change for a custom FMA to be implemented --> 
-         <disable-final type="bool">0</disable-final> <!-- Disable the Final Controllers for custom FCS integration -->
-         <elevator-in-trim type="double">0.01</elevator-in-trim> <!-- Normalized elevator to stop trimming -->
-         <elevator-out-of-trim type="double">0.02</elevator-out-of-trim> <!-- Normalized elevator to start trimming -->
-         <fd-starts-on type="bool">1</fd-starts-on> <!-- Enable/Disable Flight Director being on by default -->
-         <fd-takeoff-deg type="double">7.5</fd-takeoff-deg> <!-- Adjust Flight Director pitch bar in T/O CLB on ground -->
-         <ground-mode-select type="bool">0</ground-mode-select> <!-- Allow modes to be selected when on ground -->
-         <hdg-hld-separate type="bool">0</hdg-hld-separate> <!-- Separates HDG HLD mode from HDG SEL mode -->
-         <land-enable type="bool">1</land-enable> <!-- Enable/Disable Autoland -->
-         <land-flap type="double">0.7</land-flap> <!-- Minimum Flap used for landing -->
-         <lnav-ft type="double">50</lnav-ft> <!-- AGL when LNAV becomes active if armed -->
-         <max-kts type="int">380</max-kts> <!-- Maxmimum target airspeed in knots -->
-         <max-mach type="double">0.9</max-mach> <!-- Maxmimum target mach number -->
-         <retard-enable type="bool">1</retard-enable> <!-- Enable Thrust Retard mode -->
-         <retard-ft type="double">50</retard-ft> <!-- AGL to enter Thrust Retard mode -->
-         <stall-aoa-deg type="double">15</stall-aoa-deg> <!-- Angle of attack where AP trips off -->
-         <takeoff-hdg-cap type="double">5</takeoff-hdg-cap> <!-- Maximum bank to capture current hdg in T/O mode -->
-         <toga-spd type="double">160</toga-spd> <!-- V2 + 10kts -->
-         <use-controls-engines type="bool">1</use-controls-engines> <!-- Use /controls/engines properties -->
-         <use-controls-flight type="bool">1</use-controls-flight> <!-- Use /controls/flight properties -->
-      </settings>
-   </it-autoflight>
-   ```
+```xml
+	<it-autoflight>
+		<config>
+			<roll>
+				<kp-low>0.11</kp-low> <!-- Kp at low speed -->
+				<kp-high>0.05</kp-high> <!-- Kp at high speed -->
+				<ti>1.0</ti>
+				<td>0.0001</td>
+			</roll>
+			<pitch>
+				<kp-low>-0.14</kp-low> <!-- Kp at low speed -->
+				<kp-high>-0.06</kp-high> <!-- Kp at high speed -->
+				<ti>0.5</ti>
+				<td>0.001</td>
+			</pitch>
+			<cmd>
+				<alt>-5</alt>
+				<flch-accel>1.5</flch-accel>
+				<roll>1.6</roll>
+			</cmd>
+			<autoland> 
+				<pitch-kp>0.0051</pitch-kp>
+				<yaw-kp>-0.05</yaw-kp>
+			</autoland>
+			<rollout>
+				<roll-kp>-0.1</roll-kp>
+				<pitch-nose>0.1</pitch-nose>
+				<pitch-rate>-1.5</pitch-rate>
+				<yaw-kp>-0.02</yaw-kp>
+			</rollout>
+		</config>
+		<settings>
+			<accel-ft type="double">1000</accel-ft> <!-- Acceleration AGL when T/O CLB changes to SPD CLB, 0 to disable -->
+			<auto-bank-limit-calc type="bool">1</auto-bank-limit-calc> <!-- Disable to add a custom auto bank limit schedule -->
+			<auto-system-reset type="bool">1</auto-system-reset> <!-- Automatically reset the system after landing -->
+			<autoland-without-ap type="bool">1</autoland-without-ap> <!-- Engage autoland guidance even if the AP is off -->
+			<autothrottle-max type="double">0.95</autothrottle-max> <!-- Thrust max limit normalized -->
+			<autothrottle-min type="double">0.02</autothrottle-min> <!-- Thrust low limit normalized -->
+			<bank-max-deg type="double">25</bank-max-deg> <!-- Maximum bank limit -->
+			<custom-fma type="bool">0</custom-fma> <!-- Call functions when modes change for a custom FMA to be implemented --> 
+			<disable-final type="bool">0</disable-final> <!-- Disable the Final Controllers for custom FCS integration -->
+			<elevator-in-trim type="double">0.01</elevator-in-trim> <!-- Normalized elevator to stop trimming -->
+			<elevator-out-of-trim type="double">0.02</elevator-out-of-trim> <!-- Normalized elevator to start trimming -->
+			<fd-starts-on type="bool">1</fd-starts-on> <!-- Enable/Disable Flight Director being on by default -->
+			<fd-takeoff-deg type="double">7.5</fd-takeoff-deg> <!-- Adjust Flight Director pitch bar in T/O CLB on ground -->
+			<ground-mode-select type="bool">0</ground-mode-select> <!-- Allow modes to be selected when on ground -->
+			<hdg-hld-separate type="bool">0</hdg-hld-separate> <!-- Separates HDG HLD mode from HDG SEL mode -->
+			<land-enable type="bool">1</land-enable> <!-- Enable/Disable Autoland -->
+			<land-flap type="double">0.7</land-flap> <!-- Minimum Flap used for landing -->
+			<lnav-ft type="double">50</lnav-ft> <!-- AGL when LNAV becomes active if armed -->
+			<max-kts type="int">380</max-kts> <!-- Maxmimum target airspeed in knots -->
+			<max-mach type="double">0.9</max-mach> <!-- Maxmimum target mach number -->
+			<retard-enable type="bool">1</retard-enable> <!-- Enable Thrust Retard mode -->
+			<retard-ft type="double">50</retard-ft> <!-- AGL to enter Thrust Retard mode -->
+			<stall-aoa-deg type="double">15</stall-aoa-deg> <!-- Angle of attack where AP trips off -->
+			<takeoff-hdg-cap type="double">5</takeoff-hdg-cap> <!-- Maximum bank to capture current hdg in T/O mode -->
+			<toga-spd type="double">160</toga-spd> <!-- V2 + 10kts -->
+			<use-controls-engines type="bool">1</use-controls-engines> <!-- Use /controls/engines properties -->
+			<use-controls-flight type="bool">1</use-controls-flight> <!-- Use /controls/flight properties -->
+		</settings>
+	</it-autoflight>
+```
 
 #### Complete
 
@@ -201,9 +203,9 @@ You have finished installing IT Autoflight. However, I highly suggest to go over
 
 Below is listed each area of the IT Autoflight Config Module, and what it is used for. We will also discuss how to tune IT Autoflight efficiently.
 
-You can view the Config Module [here](https://github.com/Octal450/IT-Autoflight/blob/master/ITAF%20CONFIG.txt).
+You can view the Config Module [here](#configuration-module).
 
-This area is for the tuning of the PID controllers used. These are not hard coded, so users can update IT Autoflight without needing to edit any files. You can also adjust these in the property browser, and they take affect immediately, without needing to reload anything.
+This area is for the tuning of the control loops used. These are not hard coded, so users can update IT Autoflight without needing to edit any files. You can also adjust these in the property browser, and they take affect immediately, without needing to reload anything.
 
 #### `config/roll`
 
@@ -285,7 +287,7 @@ So, now that IT Autoflight is installed, how do you tune it to the aircraft? IT 
 
 * Open the Property Browser (/), navigate to `/it-autoflight/config/`
 * Set `tuning-mode` to 1.
-* Now engage AP1 or AP2.
+* Now engage one of the APs.
 * Now you can adjust `/it-autoflight/internal/roll-rate` and `/it-autoflight/internal/pitch-rate`.
 * Navigate to `/it-autoflight/config` and tune roll, and pitch, using the "roll rate" and "pitch rate" properties to test the configuration. It should be able to handle pitch rate changes from 1 degps, to 3degps, and roll rate changes by 2 degps, and 5 degps. Once roll rate and pitch rate are stable, move on. (Adjust Kp values by -0.01/0.01, or -0.001/0.001, Do not adjust Ti and Td unless you know what they do.
 
@@ -380,7 +382,7 @@ Blank modes will display a blank string as an annunciator.
 * `lat`: Active lateral mode: [HDG - LNAV - LOC - ALGN - RLOU - T/O - ROLL]
 * `vert`: Active vertical mode: [ALT HLD - V/S - G/S - ALT CAP - SPD DES - SPD CLB - FPA - FLARE - ROLLOUT - T/O CLB - G/A CLB - PITCH]
 * `spd`: Speed method: [THRUST - PITCH - RETARD]
-* `thr`: Thrust mode: [SPEED - MACH - IDLE - RETARD - THR LIM, CLAMP]
+* `thr`: Thrust mode: [SPEED - MACH - IDLE - RETARD - THR LIM]
 
 #### Flight Director
 
@@ -410,10 +412,10 @@ Find where you added `<itaf></itaf>` to `<nasal></nasal>`
 Add the custom-fma.nas as shown:
 
 ```xml
-<itaf>
-    <file>Nasal/it-autoflight.nas</file>
-    <file>Nasal/custom-fma.nas</file>
-</itaf>
+	<itaf>
+		<file>Nasal/it-autoflight.nas</file>
+		<file>Nasal/custom-fma.nas</file>
+	</itaf>
 ```
 
 The functions called are:
