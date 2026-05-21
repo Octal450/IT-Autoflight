@@ -231,7 +231,7 @@ This adjusts the gain scaling factor for the Rudder ALIGN/ROLLOUT controller.
 These adjust the parameters for the Command Gains.
 
 * alt: Adjust the gain for Altitude Controller.
-* flch-accel: Adjust the knots per second acceleration/* deceleration for the FLCH mode.
+* flch-accel: Adjust the knots per second acceleration/deceleration for the FLCH mode.
 * roll: Adjust the base for Roll Command Controllers (HDG, LNAV, VOR/LOC). Used by ITAF logic to calculate final roll gain.
 
 #### `config/autoland`
