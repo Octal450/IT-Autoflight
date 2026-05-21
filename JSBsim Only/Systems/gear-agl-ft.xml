@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- IT-AUTOFLIGHT Gear AGL Calculator -->
-<!-- Copyright (c) 2024 Josh Davidson (Octal450) -->
+<!-- Copyright (c) 2026 Josh Davidson (Octal450) -->
 <!-- Only for JSBsim aircraft, YAsim aircraft calculate this automatically -->
 
 <PropertyList>
@@ -12,10 +12,10 @@
 		<gain>1.0</gain>
 		<input>
 			<expression>
-				<dif>
+				<difference>
 					<property>/position/altitude-agl-ft</property>
 					<value>15</value> <!-- Change this value to adjust property -->
-				</dif>
+				</difference>
 			</expression>
 		</input>
 		<output>/position/gear-agl-ft</output>

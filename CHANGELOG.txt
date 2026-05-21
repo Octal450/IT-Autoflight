@@ -1,6 +1,34 @@
-IT-AUTOFLIGHT Changelog
+IT Autoflight Changelog
 Copyright (c) 2024 Josh Davidson (Octal450)
 I will note if new ITAF tuning or config is required. Simply check the "ITAF CONFIG.txt" file.
+
+---------------------------------------------------------------------------------------------------------------------
+
+V4.1.0:
+[Control Loop]
+* Added: Separate G/A CLB mode
+* Added: New ALIGN control loop for autoland (New config required)
+* Added: New ROLLOUT roll and yaw control loop for autoland (New config required)
+* Added: Improved FLARE pitch law for Autoland
+* Added: Add THR HOLD/CLAMP option
+* Added: New autothrottle control loop
+* Changed: FPA mode improved
+* Changed: Speed on pitch control loop improved
+
+[Logic]
+* Added: Separate G/A CLB mode
+* Added: Option to select Altimeter/AGL for acceleration (New config required)
+* Added: Add option to inhibit altitude capture
+* Fixed: Autoland logic
+
+[GUI]
+* Added: CLAMP is now shown when enabled
+* Fixed: Various logic controller bugs
+* Changed: Basic pitch mode is now mode 10
+* Changed: Align can no longer engage without AP
+* Changed: Improved autoland flare law
+* Changed: ALGN lateral mode has been renamed ALIGN
+* Changed: RLOU lateral mode has been renamed ROLLOUT to match vertical
 
 ---------------------------------------------------------------------------------------------------------------------
 

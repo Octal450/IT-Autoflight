@@ -1,5 +1,5 @@
-# IT-AUTOFLIGHT System Controller V4.0.9
-# Copyright (c) 2024 Josh Davidson (Octal450)
+# IT Autoflight System Controller V4.1.0
+# Copyright (c) 2026 Josh Davidson (Octal450)
 
 setprop("/it-autoflight/config/tuning-mode", 0); # Not used by controller
 
@@ -9,6 +9,7 @@ var Controls = {
 	aileron: props.globals.getNode("/controls/flight/aileron", 1),
 	elevator: props.globals.getNode("/controls/flight/elevator", 1),
 	rudder: props.globals.getNode("/controls/flight/rudder", 1),
+	throttle: [],
 };
 
 var FPLN = {
@@ -42,6 +43,8 @@ var Gear = {
 };
 
 var Misc = {
+	canvasAlt: props.globals.getNode("/autopilot/settings/target-altitude-ft", 1),
+	canvasHdg: props.globals.getNode("/autopilot/settings/heading-bug-deg", 1),
 	efis0Trk: props.globals.getNode("/instrumentation/efis[0]/hdg-trk-selected", 1),
 	efis0True: props.globals.getNode("/instrumentation/efis[0]/mfd/true-north", 1),
 	efis1Trk: props.globals.getNode("/instrumentation/efis[1]/hdg-trk-selected", 1),
@@ -58,8 +61,9 @@ var Orientation = {
 };
 
 var Position = {
-	gearAglFtTemp: 0,
+	altSwitchTemp: 0,
 	gearAglFt: props.globals.getNode("/position/gear-agl-ft", 1),
+	gearAglFtTemp: 0,
 	indicatedAltitudeFt: props.globals.getNode("/instrumentation/altimeter/indicated-altitude-ft", 1),
 	indicatedAltitudeFtTemp: 0,
 };
@@ -103,6 +107,7 @@ var Input = {
 	ap3Temp: 0,
 	athr: props.globals.initNode("/it-autoflight/input/athr", 0, "BOOL"),
 	athrAvail: props.globals.initNode("/it-autoflight/input/athr-avail", 1, "BOOL"),
+	athrServoClamp: props.globals.initNode("/it-autoflight/input/athr-servo-clamp", 0, "BOOL"),
 	athrTemp: 0,
 	bankLimitSw: props.globals.initNode("/it-autoflight/input/bank-limit-sw", 0, "INT"),
 	bankLimitSwTemp: 0,
@@ -112,6 +117,7 @@ var Input = {
 	fpaAbs: props.globals.initNode("/it-autoflight/input/fpa-abs", 0, "DOUBLE"), # Set by property rule
 	hdg: props.globals.initNode("/it-autoflight/input/hdg", 0, "INT"),
 	hdgCalc: 0,
+	inhibitAltCap: props.globals.initNode("/it-autoflight/input/inhibit-alt-cap", 0, "BOOL"),
 	kts: props.globals.initNode("/it-autoflight/input/kts", 250, "INT"),
 	ktsMach: props.globals.initNode("/it-autoflight/input/kts-mach", 0, "BOOL"),
 	lat: props.globals.initNode("/it-autoflight/input/lat", 5, "INT"),
@@ -168,7 +174,7 @@ var Internal = {
 	takeoffHdg: props.globals.initNode("/it-autoflight/internal/takeoff-hdg", 0, "INT"),
 	takeoffHdgCalc: 0,
 	takeoffLvl: props.globals.initNode("/it-autoflight/internal/takeoff-lvl", 1, "BOOL"),
-	throttle: [props.globals.initNode("/it-autoflight/internal/throttle[0]", 0, "DOUBLE"), props.globals.initNode("/it-autoflight/internal/throttle[1]", 0, "DOUBLE"), props.globals.initNode("/it-autoflight/internal/throttle[2]", 0, "DOUBLE"), props.globals.initNode("/it-autoflight/internal/throttle[3]", 0, "DOUBLE"), props.globals.initNode("/it-autoflight/internal/throttle[4]", 0, "DOUBLE"), props.globals.initNode("/it-autoflight/internal/throttle[5]", 0, "DOUBLE"), props.globals.initNode("/it-autoflight/internal/throttle[6]", 0, "DOUBLE"), props.globals.initNode("/it-autoflight/internal/throttle[7]", 0, "DOUBLE")],
+	throttle: [],
 	vs: props.globals.initNode("/it-autoflight/internal/vert-speed-fpm", 0, "DOUBLE"),
 	vsTemp: 0,
 };
@@ -200,15 +206,17 @@ var Output = {
 };
 
 var Text = {
-	lat: props.globals.initNode("/it-autoflight/mode/lat", "T/O", "STRING"),
-	spd: props.globals.initNode("/it-autoflight/mode/spd", "PITCH", "STRING"),
-	thr: props.globals.initNode("/it-autoflight/mode/thr", "THR LIM", "STRING"),
-	vert: props.globals.initNode("/it-autoflight/mode/vert", "T/O CLB", "STRING"),
+	lat: props.globals.initNode("/it-autoflight/text/lat", "T/O", "STRING"),
+	spd: props.globals.initNode("/it-autoflight/text/spd", "PITCH", "STRING"),
+	thr: props.globals.initNode("/it-autoflight/text/thr", "THR LIM", "STRING"),
+	vert: props.globals.initNode("/it-autoflight/text/vert", "T/O CLB", "STRING"),
 	vertTemp: "T/O CLB",
 };
 
 var Settings = {
+	accelAgl: props.globals.getNode("/it-autoflight/settings/accel-agl", 1),
 	accelFt: props.globals.getNode("/it-autoflight/settings/accel-ft", 1),
+	alignFt: props.globals.getNode("/it-autoflight/settings/align-ft", 1),
 	autoBankLimitCalc: props.globals.getNode("/it-autoflight/settings/auto-bank-limit-calc", 1),
 	autolandWithoutAp: props.globals.getNode("/it-autoflight/settings/autoland-without-ap", 1),
 	autolandWithoutApTemp: 0,
@@ -277,6 +285,7 @@ var ITAF = {
 		Input.ap2.setBoolValue(0);
 		Input.ap3.setBoolValue(0);
 		Input.athr.setBoolValue(0);
+		Input.athrServoClamp.setBoolValue(0);
 		if (t != 1) {
 			Input.fd1.setBoolValue(Settings.fdStartsOn.getBoolValue());
 			Input.fd2.setBoolValue(Settings.fdStartsOn.getBoolValue());
@@ -289,6 +298,7 @@ var ITAF = {
 		Input.pitchAbs.setValue(0);
 		Input.roll.setValue(0);
 		Input.rollAbs.setValue(0);
+		Input.inhibitAltCap.setBoolValue(0);
 		Input.lat.setValue(5);
 		Input.vert.setValue(7);
 		Input.toga.setBoolValue(0);
@@ -323,6 +333,8 @@ var ITAF = {
 		slowLoopTimer.start();
 	},
 	loop: func() {
+		Gear.wow1Temp = Gear.wow1.getBoolValue();
+		Gear.wow2Temp = Gear.wow2.getBoolValue();
 		Output.ap1Temp = Output.ap1.getBoolValue();
 		Output.ap2Temp = Output.ap2.getBoolValue();
 		Output.ap3Temp = Output.ap3.getBoolValue();
@@ -379,8 +391,6 @@ var ITAF = {
 			}
 		}
 		
-		Gear.wow1Temp = Gear.wow1.getBoolValue();
-		Gear.wow2Temp = Gear.wow2.getBoolValue();
 		Output.latTemp = Output.lat.getValue();
 		Output.vertTemp = Output.vert.getValue();
 		Text.vertTemp = Text.vert.getValue();
@@ -437,25 +447,35 @@ var ITAF = {
 		}
 		
 		# Autoland Logic
-		if ((Output.ap1Temp or Output.ap2Temp or Output.ap3Temp or Settings.autolandWithoutApTemp) and Settings.landEnable.getBoolValue()) {
+		if ((Output.ap1Temp or Output.ap2Temp or Output.ap3Temp or Settings.autolandWithoutApTemp) and Settings.landEnable.getBoolValue()) { # Lateral ALIGN/ROLLOUT requires AP to function
 			if (Output.latTemp == 2) {
-				if (Position.gearAglFtTemp <= 150) {
+				if (Position.gearAglFtTemp <= Settings.alignFt.getValue()) {
 					me.setLatMode(4);
 				}
 			}
+		} else {
+			if (Output.latTemp == 4) {
+				me.activateLoc();
+			}
+		}
+		if ((Output.ap1Temp or Output.ap2Temp or Output.ap3Temp or Settings.autolandWithoutApTemp) and Settings.landEnable.getBoolValue()) {
 			if (Output.vertTemp == 2) {
 				if (Position.gearAglFtTemp <= 50 and Position.gearAglFtTemp >= 5) {
 					me.setVertMode(6);
 				}
 			} else if (Output.vertTemp == 6) {
-				if (Gear.wow1Temp and Gear.wow2Temp and Text.vert.getValue() != "ROLLOUT") {
-					me.updateLatText("RLOU");
-					me.updateVertText("ROLLOUT");
+				if (Gear.wow1Temp and Gear.wow2Temp) {
+					if (Text.vert.getValue() != "ROLLOUT") {
+						me.updateLatText("ROLLOUT");
+						me.updateVertText("ROLLOUT");
+					}
+				} else if (Text.vert.getValue() != "FLARE") {
+					me.updateLatText("ALIGN");
+					me.updateVertText("FLARE");
 				}
 			}
 		} else {
-			if (Output.latTemp == 4 or Output.vertTemp == 6) {
-				me.activateLoc();
+			if (Output.vertTemp == 6) {
 				me.activateGs();
 			}
 		}
@@ -472,7 +492,7 @@ var ITAF = {
 		Internal.altTemp = Internal.alt.getValue();
 		Internal.altDiff = Internal.altTemp - Position.indicatedAltitudeFtTemp;
 		
-		if (Output.vertTemp != 0 and Output.vertTemp != 2 and Output.vertTemp != 6 and Output.vertTemp != 9) {
+		if (Output.vertTemp != 0 and Output.vertTemp != 2 and Output.vertTemp != 6 and Output.vertTemp != 9 and (!Input.inhibitAltCap.getBoolValue() or (Output.vertTemp != 1 and Output.vertTemp != 5))) {
 			Internal.captVs = math.clamp(math.round(abs(Internal.vs.getValue()) / (-1 * Gain.altGain.getValue()), 100), 50, 2500); # Capture limits
 			if (abs(Internal.altDiff) <= Internal.captVs and !Gear.wow1Temp and !Gear.wow2Temp) {
 				if (Internal.altTemp >= Position.indicatedAltitudeFtTemp and Internal.vsTemp >= -25) { # Don't capture if we are going the wrong way
@@ -531,9 +551,8 @@ var ITAF = {
 		}
 		
 		# Calculate Roll Command Kp
-		Gain.rollCmdKpCalc = Gain.hdgGain.getValue() + (Velocities.airspeedKt.getValue() - 140) * ((Gain.hdgGain.getValue() + 1.0 - Gain.hdgGain.getValue()) / (360 - 140));
-		Gain.rollCmdKpCalc = math.clamp(Gain.rollCmdKpCalc, Gain.hdgGain.getValue(), Gain.hdgGain.getValue() + 1.0);
-		
+		Gain.rollCmdKpCalc = Gain.hdgGain.getValue() + (Velocities.airspeedKt.getValue() - 140) * ((Gain.hdgGain.getValue() + 1.5 - Gain.hdgGain.getValue()) / (360 - 140));
+		Gain.rollCmdKpCalc = math.clamp(Gain.rollCmdKpCalc, Gain.hdgGain.getValue(), Gain.hdgGain.getValue() + 1.5);
 		Gain.rollCmdKp.setValue(Gain.rollCmdKpCalc);
 		
 		# Waypoint Advance Logic
@@ -647,10 +666,6 @@ var ITAF = {
 				Controls.rudder.setValue(0);
 			}
 			
-			if (Text.vert.getValue() == "ROLLOUT") {
-				me.init(1);
-			}
-			
 			if (Sound.enableApOff) {
 				Sound.apOff.setBoolValue(1);
 				Sound.enableApOff = 0;
@@ -664,14 +679,14 @@ var ITAF = {
 			}
 		} else {
 			if (!Settings.useControlsEngines.getBoolValue()) {
-				setprop("/controls/engines/engine[0]/throttle", Internal.throttle[0].getValue());
-				setprop("/controls/engines/engine[1]/throttle", Internal.throttle[1].getValue());
-				setprop("/controls/engines/engine[2]/throttle", Internal.throttle[2].getValue());
-				setprop("/controls/engines/engine[3]/throttle", Internal.throttle[3].getValue());
-				setprop("/controls/engines/engine[4]/throttle", Internal.throttle[4].getValue());
-				setprop("/controls/engines/engine[5]/throttle", Internal.throttle[5].getValue());
-				setprop("/controls/engines/engine[6]/throttle", Internal.throttle[6].getValue());
-				setprop("/controls/engines/engine[7]/throttle", Internal.throttle[7].getValue());
+				Controls.throttle[0].setValue(Internal.throttle[0].getValue());
+				Controls.throttle[1].setValue(Internal.throttle[1].getValue());
+				Controls.throttle[2].setValue(Internal.throttle[2].getValue());
+				Controls.throttle[3].setValue(Internal.throttle[3].getValue());
+				Controls.throttle[4].setValue(Internal.throttle[4].getValue());
+				Controls.throttle[5].setValue(Internal.throttle[5].getValue());
+				Controls.throttle[6].setValue(Internal.throttle[6].getValue());
+				Controls.throttle[7].setValue(Internal.throttle[7].getValue());
 			}
 			Output.athr.setBoolValue(0);
 		}
@@ -763,7 +778,7 @@ var ITAF = {
 			me.updateLocArm(0);
 			me.updateGsArm(0);
 			Output.lat.setValue(4);
-			me.updateLatText("ALGN");
+			me.updateLatText("ALIGN");
 		} else if (n == 5) { # T/O
 			me.updateLnavArm(0);
 			me.updateLocArm(0);
@@ -815,7 +830,7 @@ var ITAF = {
 			me.updateThrustMode();
 		} else if (n == 1) { # V/S or FPA
 			if (Input.vsFpa.getBoolValue()) { # FPA if vsFpa is set
-				if (abs(Input.altDiff) >= 25) {
+				if (abs(Input.altDiff) >= 25 or Input.inhibitAltCap.getBoolValue()) {
 					Internal.flchActive = 0;
 					Internal.altCaptureActive = 0;
 					me.updateGsArm(0);
@@ -827,7 +842,7 @@ var ITAF = {
 					me.updateGsArm(0);
 				}
 			} else {
-				if (abs(Input.altDiff) >= 25) {
+				if (abs(Input.altDiff) >= 25 or Input.inhibitAltCap.getBoolValue()) {
 					Internal.flchActive = 0;
 					Internal.altCaptureActive = 0;
 					me.updateGsArm(0);
@@ -867,7 +882,7 @@ var ITAF = {
 				me.updateThrustMode();
 			}
 		} else if (n == 5) { # FPA
-			if (abs(Input.altDiff) >= 25) {
+			if (abs(Input.altDiff) >= 25 or Input.inhibitAltCap.getBoolValue()) {
 				Internal.flchActive = 0;
 				Internal.altCaptureActive = 0;
 				me.updateGsArm(0);
@@ -885,25 +900,22 @@ var ITAF = {
 			Output.vert.setValue(6);
 			me.updateVertText("FLARE");
 			me.updateThrustMode();
-		} else if (n == 7) { # T/O CLB or G/A CLB, text is set by TOGA selector
+		} else if (n == 7) { # T/O CLB
 			Internal.flchActive = 0;
 			Internal.altCaptureActive = 0;
 			me.updateGsArm(0);
 			Output.vert.setValue(7);
+			me.updateVertText("T/O CLB");
 			Input.ktsMach.setBoolValue(0);
 			me.updateThrustMode();
-		} else if (n == 8) { # PITCH
-			if (abs(Input.altDiff) >= 25) {
-				Internal.flchActive = 0;
-				Internal.altCaptureActive = 0;
-				me.updateGsArm(0);
-				Output.vert.setValue(8);
-				me.updateVertText("PITCH");
-				me.syncPitch();
-				me.updateThrustMode();
-			} else {
-				me.updateGsArm(0);
-			}
+		} else if (n == 8) { # G/A CLB
+			Internal.flchActive = 0;
+			Internal.altCaptureActive = 0;
+			me.updateGsArm(0);
+			Output.vert.setValue(8);
+			me.updateVertText("G/A CLB");
+			Input.ktsMach.setBoolValue(0);
+			me.updateThrustMode();
 		} else if (n == 9) { # Blank
 			Internal.flchActive = 0;
 			Internal.altCaptureActive = 0;
@@ -914,49 +926,76 @@ var ITAF = {
 			if (!Settings.disableFinal.getBoolValue()) {
 				Controls.elevator.setValue(0);
 			}
+		} else if (n == 10) { # PITCH
+			if (abs(Input.altDiff) >= 25) {
+				Internal.flchActive = 0;
+				Internal.altCaptureActive = 0;
+				me.updateGsArm(0);
+				Output.vert.setValue(10);
+				me.updateVertText("PITCH");
+				me.syncPitch();
+				me.updateThrustMode();
+			} else {
+				me.updateGsArm(0);
+			}
 		}
 	},
 	updateThrustMode: func() {
 		Output.vertTemp = Output.vert.getValue();
 		if (Output.athr.getBoolValue() and Output.vertTemp != 7 and Settings.retardEnable.getBoolValue() and Position.gearAglFt.getValue() <= Settings.retardAltitude.getValue() and Misc.flapNorm.getValue() >= Settings.landFlap.getValue() - 0.001) {
 			Output.thrMode.setValue(1);
+			Input.athrServoClamp.setBoolValue(0); # Always unclamp during RETARD
 			Text.spd.setValue("RETARD");
 			Text.thr.setValue("RETARD");
 			if (Gear.wow1.getBoolValue() or Gear.wow2.getBoolValue()) { # Disconnect A/THR on either main gear touch
 				me.athrMaster(0);
-				setprop("/controls/engines/engine[0]/throttle", 0);
-				setprop("/controls/engines/engine[1]/throttle", 0);
-				setprop("/controls/engines/engine[2]/throttle", 0);
-				setprop("/controls/engines/engine[3]/throttle", 0);
-				setprop("/controls/engines/engine[4]/throttle", 0);
-				setprop("/controls/engines/engine[5]/throttle", 0);
-				setprop("/controls/engines/engine[6]/throttle", 0);
-				setprop("/controls/engines/engine[7]/throttle", 0);
+				Controls.throttle[0].setValue(0);
+				Controls.throttle[1].setValue(0);
+				Controls.throttle[2].setValue(0);
+				Controls.throttle[3].setValue(0);
+				Controls.throttle[4].setValue(0);
+				Controls.throttle[5].setValue(0);
+				Controls.throttle[6].setValue(0);
+				Controls.throttle[7].setValue(0);
 			}
 		} else if (Output.vertTemp == 4) {
 			if (Internal.alt.getValue() >= Position.indicatedAltitudeFt.getValue()) {
 				Output.thrMode.setValue(2);
 				Text.spd.setValue("PITCH");
-				Text.thr.setValue("THR LIM");
+				if (Input.athrServoClamp.getBoolValue()) {
+					Text.thr.setValue("CLAMP");
+				} else {
+					Text.thr.setValue("THR LIM");
+				}
 				if (Internal.flchActive and Text.vert.getValue() != "SPD CLB") {
 					me.updateVertText("SPD CLB");
 				}
 			} else {
 				Output.thrMode.setValue(1);
 				Text.spd.setValue("PITCH");
-				Text.thr.setValue("IDLE");
+				if (Input.athrServoClamp.getBoolValue()) {
+					Text.thr.setValue("CLAMP");
+				} else {
+					Text.thr.setValue("IDLE");
+				}
 				if (Internal.flchActive and Text.vert.getValue() != "SPD DES") {
 					me.updateVertText("SPD DES");
 				}
 			}
-		} else if (Output.vertTemp == 7) {
+		} else if (Output.vertTemp == 7 or Output.vertTemp == 8) {
 			Output.thrMode.setValue(2);
 			Text.spd.setValue("PITCH");
-			Text.thr.setValue("THR LIM");
+			if (Input.athrServoClamp.getBoolValue()) {
+				Text.thr.setValue("CLAMP");
+			} else {
+				Text.thr.setValue("THR LIM");
+			}
 		} else {
 			Output.thrMode.setValue(0);
 			Text.spd.setValue("THRUST");
-			if (Input.ktsMach.getBoolValue()) {
+			if (Input.athrServoClamp.getBoolValue()) {
+				Text.thr.setValue("CLAMP");
+			} else if (Input.ktsMach.getBoolValue()) {
 				Text.thr.setValue("MACH");
 			} else {
 				Text.thr.setValue("SPEED");
@@ -1020,7 +1059,13 @@ var ITAF = {
 		}
 	},
 	checkFlch: func(a) {
-		if (Position.gearAglFt.getValue() >= a and a != 0) {
+		if (Settings.accelAgl.getBoolValue()) {
+			Position.altSwitchTemp = Position.gearAglFt.getValue();
+		} else {
+			Position.altSwitchTemp = Position.indicatedAltitudeFt.getValue();
+		}
+		
+		if (!Gear.wow1.getBoolValue() and !Gear.wow2.getBoolValue() and Position.altSwitchTemp >= a and a != 0) {
 			me.setVertMode(4);
 		}
 	},
@@ -1121,8 +1166,7 @@ var ITAF = {
 		Output.vertTemp = Output.vert.getValue();
 		if ((Output.vertTemp == 2 or Output.vertTemp == 6) and Velocities.indicatedAirspeedKt.getValue() >= 80) {
 			me.setLatMode(3);
-			me.setVertMode(7); # Must be before kicking AP off
-			me.updateVertText("G/A CLB");
+			me.setVertMode(8); # Must be before kicking AP off
 			me.syncKtsGa();
 			if (Gear.wow1.getBoolValue() or Gear.wow2.getBoolValue()) {
 				me.ap1Master(0);
@@ -1135,7 +1179,6 @@ var ITAF = {
 				me.setLatMode(5);
 			}
 			me.setVertMode(7);
-			me.updateVertText("T/O CLB");
 		}
 	},
 	syncKts: func() {
@@ -1253,7 +1296,8 @@ setlistener("/it-autoflight/input/fd2", func() {
 });
 
 setlistener("/it-autoflight/input/kts-mach", func() {
-	if (Output.vert.getValue() == 7) { # Mach is not allowed in Mode 7, and don't sync
+	Output.vertTemp = Output.vert.getValue();
+	if (Output.vertTemp == 7 or Output.vertTemp == 8) { # Mach is not allowed in mode 7/8, and don't sync
 		if (Input.ktsMach.getBoolValue()) {
 			Input.ktsMach.setBoolValue(0);
 		}
@@ -1393,13 +1437,18 @@ setlistener("/sim/signals/fdm-initialized", func() {
 	ITAF.init();
 });
 
+for (var i = 0; i < 8; i = i + 1) { # We MUST use 8 throttles
+	append(Controls.throttle, props.globals.initNode("/controls/engines/engine[" ~ i ~ "]/throttle", 0, "DOUBLE"));
+	append(Internal.throttle, props.globals.initNode("/it-autoflight/internal/throttle[" ~ i ~ "]", 0, "DOUBLE"));
+}
+
 # For Canvas Nav Display.
 setlistener("/it-autoflight/input/hdg", func() {
-	setprop("/autopilot/settings/heading-bug-deg", getprop("/it-autoflight/input/hdg"));
+	Misc.canvasHdg.setValue(Input.hdg.getValue());
 }, 0, 0);
 
 setlistener("/it-autoflight/internal/alt", func() {
-	setprop("/autopilot/settings/target-altitude-ft", getprop("/it-autoflight/internal/alt"));
+	Misc.canvasAlt.setValue(Internal.alt.getValue());
 }, 0, 0);
 
 var loopTimer = maketimer(0.1, ITAF, ITAF.loop);

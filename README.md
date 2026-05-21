@@ -34,8 +34,8 @@ The roll/yaw modes used by the autopilot.
 * HDG: A set heading is being tracked. The behavior of the mode can be heading select or heading hold based on pilot selection and user configurable behavior.
 * LNAV: A GPS route is being tracked.
 * LOC: A VOR or ILS localizer is being tracked.
-* ALGN: Crab angle is removed to align with the runway and bank angle applied to maintain the ILS localizer.
-* RLOU: Crosswind aileron is applied, and the rudder is used to keep the aircraft on the centerline during rollout.
+* ALIGN: Crab angle is removed to align with the runway and bank angle applied to maintain the ILS localizer.
+* ROLLOUT: Crosswind aileron is applied, and the rudder is used to keep the aircraft on the centerline during rollout.
 * T/O: A takeoff heading is being tracked, or the wings are being kept level, based on user configurable behavior.
 * ROLL: A set bank angle is being held.
 * Blank: No roll/yaw mode is active.
@@ -67,6 +67,7 @@ The modes used by the autothrottle. Autothrottle modes are coupled to the vertic
 * IDLE: The throttles are slowly driven to the idle stop for speed on pitch descends.
 * RETARD: The throttles are slowly driven to the idle stop for when under a user configurable radio altitude for the landing flare. On touchdown, they are driven to the idle stop at a faster speed.
 * THR LIM: The throttles are slowly driven to the thrust limit for speed on pitch climbs. In takeoff or go around modes, the throttles are driven to the thrust limit at a faster speed.
+* CLAMP: The throttle servos are not being moved and the levers can be adjusted by the pilot.
 
 ## Installation Instructions
 
@@ -76,7 +77,7 @@ This guide will teach you how to install IT Autoflight to an aircraft.
 
 ### Before you Begin
 
-Download the latest version of IT Autoflight V4.0.X from [here](https://github.com/Octal450/IT-Autoflight/releases/latest). Extract the Archive with WinRAR, 7Zip, or similar. If you are using a custom instrumentation file, make sure it contains the ``<gps>`` item, as IT Autoflight uses it to get an accurate and stable V/S signal. You also need the property ``/position/gear-agl-ft``. This property is automatically created by YAsim, but for JSBsim you need to add a calculation for it on your own. See instructions below.
+Download the latest version of IT Autoflight from [here](https://github.com/Octal450/IT-Autoflight/releases/latest). Extract the Archive with WinRAR, 7Zip, or similar. If you are using a custom instrumentation file, make sure it contains the ``<gps>`` item, as IT Autoflight uses it to get an accurate and stable V/S signal. You also need the property ``/position/gear-agl-ft``. This property is automatically created by YAsim, but for JSBsim you need to add a calculation for it on your own. See instructions below.
 
 ### Installation
 
@@ -137,38 +138,35 @@ Now to add the IT Autoflight controller:
 	<it-autoflight>
 		<config>
 			<roll>
-				<kp-low>0.11</kp-low> <!-- Kp at low speed -->
-				<kp-high>0.05</kp-high> <!-- Kp at high speed -->
-				<ti>1.0</ti>
-				<td>0.0001</td>
+				<kp-low>0.11</kp-low> <!-- Roll rate gain at low speed -->
+				<kp-high>0.05</kp-high> <!-- Roll rate gain at high speed -->
 			</roll>
 			<pitch>
-				<kp-low>-0.14</kp-low> <!-- Kp at low speed -->
-				<kp-high>-0.06</kp-high> <!-- Kp at high speed -->
-				<ti>0.5</ti>
-				<td>0.001</td>
+				<kp-low>-0.14</kp-low> <!-- Pitch rate gain at low speed -->
+				<kp-high>-0.06</kp-high> <!-- Pitch rate gain at high speed -->
 			</pitch>
+			<yaw>
+				<gain-factor>1.0</gain-factor> <!-- Yaw rate gain scaling factor for align/rollout -->
+			</yaw>
 			<cmd>
-				<alt>-5</alt>
-				<flch-accel>1.5</flch-accel>
-				<roll>1.6</roll>
+				<alt>-5</alt> <!-- Altitude deviation gain -->
+				<flch-accel>1.5</flch-accel> <!-- Level change accel/decel limit -->
+				<roll>1.6</roll> <!-- Roll heading deviation base gain -->
 			</cmd>
-			<autoland> 
-				<pitch-kp>0.0051</pitch-kp>
-				<yaw-kp>-0.05</yaw-kp>
-			</autoland>
 			<rollout>
-				<roll-kp>-0.1</roll-kp>
-				<pitch-nose>0.1</pitch-nose>
-				<pitch-rate>-1.5</pitch-rate>
-				<yaw-kp>-0.02</yaw-kp>
+				<pitch-nose>0.1</pitch-nose> <!-- Forward pressure to keep nose gear on ground -->
+				<pitch-rate>-2</pitch-rate> <!-- Rate to lower nose to ground after touchdown -->
+				<roll-angle-gain>-0.2</roll-angle-gain> <!-- Roll angle weighing for aileron after touchdown -->
+				<roll-cross-gain>-0.5</roll-cross-gain> <!-- Crossed controls weighing for aileron after touchdown -->
 			</rollout>
 		</config>
 		<settings>
-			<accel-ft type="double">1000</accel-ft> <!-- Acceleration AGL when T/O CLB changes to SPD CLB, 0 to disable -->
+			<accel-agl type="bool">1</accel-agl> <!-- Use AGL altitude for acceleration, use if no FMS acceleration alt is computed -->
+			<accel-ft type="double">3000</accel-ft> <!-- Acceleration AGL when T/O CLB changes to SPD CLB, 0 to disable -->
+			<align-ft type="int">150</align-ft> <!-- AGL when ALIGN engages during autoland -->
 			<auto-bank-limit-calc type="bool">1</auto-bank-limit-calc> <!-- Disable to add a custom auto bank limit schedule -->
 			<auto-system-reset type="bool">1</auto-system-reset> <!-- Automatically reset the system after landing -->
-			<autoland-without-ap type="bool">1</autoland-without-ap> <!-- Engage autoland guidance even if the AP is off -->
+			<autoland-without-ap type="bool">0</autoland-without-ap> <!-- Allows FLARE and ROLLOUT pitch modes to engage even if AP is off -->
 			<autothrottle-max type="double">0.95</autothrottle-max> <!-- Thrust max limit normalized -->
 			<autothrottle-min type="double">0.02</autothrottle-min> <!-- Thrust low limit normalized -->
 			<bank-max-deg type="double">25</bank-max-deg> <!-- Maximum bank limit -->
@@ -180,9 +178,9 @@ Now to add the IT Autoflight controller:
 			<fd-takeoff-deg type="double">7.5</fd-takeoff-deg> <!-- Adjust Flight Director pitch bar in T/O CLB on ground -->
 			<ground-mode-select type="bool">0</ground-mode-select> <!-- Allow modes to be selected when on ground -->
 			<hdg-hld-separate type="bool">0</hdg-hld-separate> <!-- Separates HDG HLD mode from HDG SEL mode -->
-			<land-enable type="bool">1</land-enable> <!-- Enable/Disable Autoland -->
+			<land-enable type="bool">1</land-enable> <!-- Enable/Disable autoland -->
 			<land-flap type="double">0.7</land-flap> <!-- Minimum Flap used for landing -->
-			<lnav-ft type="double">50</lnav-ft> <!-- AGL when LNAV becomes active if armed -->
+			<lnav-ft type="double">100</lnav-ft> <!-- AGL when LNAV becomes active if armed -->
 			<max-kts type="int">380</max-kts> <!-- Maxmimum target airspeed in knots -->
 			<max-mach type="double">0.9</max-mach> <!-- Maxmimum target mach number -->
 			<retard-enable type="bool">1</retard-enable> <!-- Enable Thrust Retard mode -->
@@ -210,17 +208,23 @@ This area is for the tuning of the control loops used. These are not hard coded,
 
 #### `config/roll`
 
-These adjust the parameters for the Roll Rate PID Controller.
+These adjust the parameters for the Roll Rate PID Controller. It is not recommended to adjust the Ti or Td unless the aircraft is very unconventional.
 
 * kp-low: Adjust the Kp at Approach Speed/Config
 * kp-high: Adjust the Kp at Max Indicated Airspeed (Tune at low altitude for best results)
 
 #### `config/pitch`
 
-These adjust the parameters for the Pitch Rate PID Controller. You cannot adjust the Automatic Elevator Trim Controller at this time.
+These adjust the parameters for the Pitch Rate PID Controller. It is not recommended to adjust the Ti or Td unless the aircraft is very unconventional. You cannot adjust the Automatic Elevator Trim Controller at this time.
 
 * kp-low: Adjust the Kp at Approach Speed/Config
 * kp-high: Adjust the Kp at Max Indicated Airspeed (Tune at low altitude for best results)
+
+#### `config/yaw`
+
+This adjusts the gain scaling factor for the Rudder ALIGN/ROLLOUT controller.
+
+* gain-factor: Yaw rate gain scaling factor
 
 #### `config/cmd`
 
@@ -234,21 +238,23 @@ These adjust the parameters for the Command Gains.
 
 These adjust the parameters for the PIDs used for Autoland. Tune the Roll, Pitch, and CMD first.
 
-* pitch-kp: Adjust the Kp for the V/S PID Controller in LAND/FLARE.
-* yaw-kp: Adjust the Kp for the Rudder VOR/LOC PID Controller.
+* pitch-kp: Adjust the Kp for the V/S PID Controller in FLARE.
+* yaw-kp: Adjust the Kp for the Rudder ALIGN Controller.
 
 #### `config/rollout`
 
 These adjust the parameters for the PIDs used for Autoland Rollout. Tune Roll, Pitch, CMD, and Autoland first.
 
-* roll-kp: Adjust the amount of aileron used after touchdown for keeping aircraft wings level.
 * pitch-nose: Adjust the amount of downward elevator deflection once the nose gear has touched down.
-* pitch-rate: Adjust the pitch rate of the nose lowering after touchdown.
-* yaw-kp: Adjust the Kp for the Rudder/Nose Wheel VOR/LOC PID Controller.
+* pitch-rate: Adjust the target pitch rate of the nose lowering controller after touchdown.
+* roll-angle-gain: Adjust the bank angle weighing factor of the aileron command after touchdown for keeping aircraft wings level.
+* roll-cross-gain: Adjust the crossed controls weighing factor of the aileron command after touchdown.
 
 #### `settings`
 
-* `accel-ft`: Define the altitude when the pitch mode changes from T/O CLB to SPD CLB (known as acceleration altitude).
+* `accel-agl`: Define whether to use the altimeter (0) or AGL altitude (1) for acceleration altitude.
+* `accel-ft`: Define the altitude when the pitch mode changes from T/O CLB to SPD CLB (known as acceleration altitude), set to 0 to disable.
+* `align-ft`: Define the altitude when the ALIGN lateral mode engages during an autoland.
 * `auto-bank-limit-calc`: Disable (0) or Enable (1) calculation of the auto bank limit, when disabled, you can drive `/it-autoflight/internal/bank-limit-auto` with your own.
 * `auto-system-reset`: Disable (0) or Enable (1) the system automatically resetting after landing.
 * `autoland-without-ap`: Allows autoland guidance modes to be armed and become active even if AP1 and AP2 are off.
@@ -294,10 +300,10 @@ So, now that IT Autoflight is installed, how do you tune it to the aircraft? IT 
 
 #### CMD and Autoland
 
-Important Note: Most of the time, CMD tuning is not required to be changed. They should only need changing if the FDM or aircraft is bizarre. Before you tweak the values, try to tune your Roll and Pitch Rate values better.
+Important Note: Most of the time, CMD tuning is not required to be changed. They should only need changing if the FDM or aircraft is bizarre. Before you tweak the values, try to tune your Roll and Pitch Rate controllers better.
 
 * Once those are all working, tune Autoland. Easy way to test: KNUQ RW32R, takeoff runway hdg, climb 2000ft. ILS: 109.55, course 284. ARM ILS once above 250ft. Aircraft should intercept ILS.
-* The `autoland/pitch-kp` is for the LAND/FLARE modes. Do not change it unless needed. Lastly, `autoland/rudder-kp` is for the Rudder LOC track.
+* The `autoland/pitch-kp` is for the FLARE mode. Do not change it unless needed. Lastly, `autoland/yaw-kp` is for the Rudder ALIGN/ROLLOUT modes.
 
 #### Complete
 
@@ -330,6 +336,7 @@ This section will discuss the inputs and outputs of IT Autoflight. These can be 
 * `fpa`: Adjusts the Target Flight Path Angle in degrees (-9.9 - 9.9). DOUBLE. (Note: IT Autoflight can use higher/lower FPA.)
 * `fpa-abs`: Automatically set by IT Autoflight. Absolute value of the fpa input, used for fixing problems when animating cockpit controls. DOUBLE.
 * `hdg`: Adjusts the Target Heading in degrees (1 - 360, or 0 - 359). INT.
+* `inhibit-alt-cap`: Allow (0) or disallow (1) altitude capture when in V/S or FPA modes. BOOL.
 * `kts`: Adjusts the Target Airspeed in Knots (100 - 350 by default). INT. (Note: IT Autoflight can use higher/lower airspeed.)
 * `kts-mach`: Switches between Speed (0) and Mach mode (1). BOOL.
 * `lat`: Changes the lateral mode to HDG SEL (0), LNAV (1), VOR/LOC (2), HDG HLD (3), ROLL (6), Blank (9). INT. (Note: Mode 4 and 5 exist, but only engaged by the controller automatically, do not set to these values.)
@@ -376,14 +383,14 @@ This section will discuss the inputs and outputs of IT Autoflight. These can be 
 * `vert`: Active vertical mode: ALT HLD/CAP (0), V/S (1), G/S (2), FLCH (4), FPA (5), FLARE/ROLLOUT (6), T/O CLB (7), G/A CLB (8), Blank (9), PITCH (10). (Note: Mode 3 is reserved and not used.)
 * `thr-mode`: Thrust System Mode: THRUST (0), PITCH Idle/RETARD (1), or PITCH Thrust Limit (2). (Note: PITCH Idle/RETARD commands the Autothrottle to Idle limit thrust, and PITCH Thrust Limit commands the Autothrottle to use set the thrust to the active thrust limit, like CLB, MCT, TOGA, etc.)
 
-#### Text Outputs: `/it-autoflight/mode`
+#### Text Outputs: `/it-autoflight/text`
 
 Blank modes will display a blank string as an annunciator.
 
-* `lat`: Active lateral mode: [HDG - LNAV - LOC - ALGN - RLOU - T/O - ROLL]
+* `lat`: Active lateral mode: [HDG - LNAV - LOC - ALIGN - ROLLOUT - T/O - ROLL]
 * `vert`: Active vertical mode: [ALT HLD - V/S - G/S - ALT CAP - SPD DES - SPD CLB - FPA - FLARE - ROLLOUT - T/O CLB - G/A CLB - PITCH]
 * `spd`: Speed method: [THRUST - PITCH - RETARD]
-* `thr`: Thrust mode: [SPEED - MACH - IDLE - RETARD - THR LIM]
+* `thr`: Thrust mode: [SPEED - MACH - IDLE - RETARD - THR LIM - CLAMP]
 
 #### Flight Director
 
