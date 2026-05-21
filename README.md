@@ -208,17 +208,23 @@ This area is for the tuning of the control loops used. These are not hard coded,
 
 #### `config/roll`
 
-These adjust the parameters for the Roll Rate PID Controller.
+These adjust the parameters for the Roll Rate PID Controller. It is not recommended to adjust the Ti or Td unless the aircraft is very unconventional.
 
 * kp-low: Adjust the Kp at Approach Speed/Config
 * kp-high: Adjust the Kp at Max Indicated Airspeed (Tune at low altitude for best results)
 
 #### `config/pitch`
 
-These adjust the parameters for the Pitch Rate PID Controller. You cannot adjust the Automatic Elevator Trim Controller at this time.
+These adjust the parameters for the Pitch Rate PID Controller. It is not recommended to adjust the Ti or Td unless the aircraft is very unconventional. You cannot adjust the Automatic Elevator Trim Controller at this time.
 
 * kp-low: Adjust the Kp at Approach Speed/Config
 * kp-high: Adjust the Kp at Max Indicated Airspeed (Tune at low altitude for best results)
+
+#### `config/yaw`
+
+This adjusts the gain scaling factor for the Rudder ALIGN/ROLLOUT controller.
+
+* gain-factor: Yaw rate gain scaling factor
 
 #### `config/cmd`
 
@@ -232,17 +238,17 @@ These adjust the parameters for the Command Gains.
 
 These adjust the parameters for the PIDs used for Autoland. Tune the Roll, Pitch, and CMD first.
 
-* pitch-kp: Adjust the Kp for the V/S PID Controller in LAND/FLARE.
-* yaw-kp: Adjust the Kp for the Rudder VOR/LOC PID Controller.
+* pitch-kp: Adjust the Kp for the V/S PID Controller in FLARE.
+* yaw-kp: Adjust the Kp for the Rudder ALIGN Controller.
 
 #### `config/rollout`
 
 These adjust the parameters for the PIDs used for Autoland Rollout. Tune Roll, Pitch, CMD, and Autoland first.
 
-* roll-kp: Adjust the amount of aileron used after touchdown for keeping aircraft wings level.
 * pitch-nose: Adjust the amount of downward elevator deflection once the nose gear has touched down.
-* pitch-rate: Adjust the pitch rate of the nose lowering after touchdown.
-* yaw-kp: Adjust the Kp for the Rudder/Nose Wheel VOR/LOC PID Controller.
+* pitch-rate: Adjust the target pitch rate of the nose lowering controller after touchdown.
+* roll-angle-gain: Adjust the bank angle weighing factor of the aileron command after touchdown for keeping aircraft wings level.
+* roll-cross-gain: Adjust the crossed controls weighing factor of the aileron command after touchdown.
 
 #### `settings`
 
@@ -294,10 +300,10 @@ So, now that IT Autoflight is installed, how do you tune it to the aircraft? IT 
 
 #### CMD and Autoland
 
-Important Note: Most of the time, CMD tuning is not required to be changed. They should only need changing if the FDM or aircraft is bizarre. Before you tweak the values, try to tune your Roll and Pitch Rate values better.
+Important Note: Most of the time, CMD tuning is not required to be changed. They should only need changing if the FDM or aircraft is bizarre. Before you tweak the values, try to tune your Roll and Pitch Rate controllers better.
 
 * Once those are all working, tune Autoland. Easy way to test: KNUQ RW32R, takeoff runway hdg, climb 2000ft. ILS: 109.55, course 284. ARM ILS once above 250ft. Aircraft should intercept ILS.
-* The `autoland/pitch-kp` is for the LAND/FLARE modes. Do not change it unless needed. Lastly, `autoland/rudder-kp` is for the Rudder LOC track.
+* The `autoland/pitch-kp` is for the FLARE mode. Do not change it unless needed. Lastly, `autoland/yaw-kp` is for the Rudder ALIGN/ROLLOUT modes.
 
 #### Complete
 
