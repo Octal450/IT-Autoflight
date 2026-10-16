@@ -1212,7 +1212,7 @@
 	<filter>
 		<name>System Command: Target Roll Rate</name>
 		<type>gain</type>
-		<gain>-0.9</gain>
+		<gain>-0.8</gain>
 		<enable>
 			<condition>
 				<not-equals>
